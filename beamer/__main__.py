@@ -1,10 +1,33 @@
 """Provides a command line interface to beamer"""
 
+import argparse
 import os
 import sys
 
 from beamer import files
 from beamer import prices
+
+
+def parse_args() -> argparse.Namespace:
+    """Parse command line arguments"""
+    parser = argparse.ArgumentParser(
+        description="Calculate average prices for short and tall trees",
+    )
+    parser.add_argument(
+        "-p",
+        "--properties",
+        type=str,
+        default=files.default_properties_path,
+        help=f"Path to properties file (default: {files.default_properties_path})",
+    )
+    parser.add_argument(
+        "-t",
+        "--trees",
+        type=str,
+        default=files.default_trees_path,
+        help=f"Path to trees file (default: {files.default_trees_path})",
+    )
+    return parser.parse_args()
 
 
 def show_error(error: Exception) -> None:
@@ -29,10 +52,9 @@ def main() -> int:
     This method only handles CLI arguments and errors
         And calls the script() function, above, for "the real work"
     """
+    args = parse_args()
     try:
-        short_average, tall_average, currency = script(
-            files.default_properties_path, files.default_trees_path
-        )
+        short_average, tall_average, currency = script(args.properties, args.trees)
         print(f"Price average among short trees: {currency} {short_average:,.2f}")
         print(f"Price average among  tall trees: {currency} {tall_average:,.2f}")
     except ValueError as error:
