@@ -91,6 +91,11 @@ non_interactive = true
 check_untyped_defs = true
 strict_optional = true
 
+[tool.isort]
+profile = "black"
+force_single_line = "True"
+
+
 [tool.coverage.run]
 branch = true
 parallel = true
