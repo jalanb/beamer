@@ -3,17 +3,11 @@
 Which should read given files in csv and json formats
 """
 
-from pathlib import Path
 from unittest import TestCase
 
 import pytest
 
 from beamer import files
-
-# We expect default files in root directory of project
-path_to_data = Path(files.__file__).parent.parent
-default_csv_path = path_to_data / "dublin-property.csv"
-default_json_path = path_to_data / "dublin-trees.json"
 
 class TestFiles(TestCase):
     """Test the beamer.files module
@@ -24,59 +18,59 @@ class TestFiles(TestCase):
     """
 
     def test_read_no_csv_path(self):
-        """Test read_csv_file() with no path"""
+        """Test read_properties() with no path"""
         with pytest.raises(ValueError):
-            _ = files.read_csv_file(None)
+            _ = files.read_properties(None)
 
     def test_read_empty_csv_path(self):
-        """Test read_csv_file() with empty path"""
+        """Test read_properties() with empty path"""
         with pytest.raises(ValueError):
-            _ = files.read_csv_file("")
+            _ = files.read_properties("")
 
     def test_read_no_json_path(self):
-        """Test read_json_file() with no path"""
+        """Test read_trees() with no path"""
         with pytest.raises(ValueError):
-            _ = files.read_json_file(None)
+            _ = files.read_trees(None)
 
     def test_read_empty_json_path(self):
-        """Test read_json_file() with empty path"""
+        """Test read_trees() with empty path"""
         with pytest.raises(ValueError):
-            _ = files.read_json_file("")
+            _ = files.read_trees("")
 
-    def test_read_csv_file(self):
-        """Test read_csv_file() reads something from default csv file
+    def test_read_properties(self):
+        """Test read_properties() reads something from default csv file
 
         And the something is a list
         """
-        data = files.read_csv_file(default_csv_path)
-        assert data
-        assert isinstance(data, list)
+        properties = files.read_properties(files.default_properties_path)
+        assert properties
+        assert isinstance(properties, list)
 
-    def test_read_json_file(self):
-        """Test read_json_file() reads something from default json file
+    def test_read_trees(self):
+        """Test read_trees() reads something from default json file
 
         And the something is a dict
         """
-        data = files.read_json_file(default_json_path)
-        assert data
-        assert isinstance(data, dict)
+        trees = files.read_trees(files.default_trees_path)
+        assert trees
+        assert isinstance(trees, dict)
 
     def test_read_csv_columns(self):
-        """Test read_csv_file() recognises columns
+        """Test read_properties() recognises columns
 
         Some expected column names:
             'Address', 'Street Name', 'Price'
         """
-        rows = files.read_csv_file(default_csv_path)
+        rows = files.read_properties(files.default_properties_path)
         assert len(rows)
         row = rows[0]
         assert isinstance(row, dict)
-        assert 'Address' in row, row.keys()
-        assert 'Street Name' in row, row.keys()
-        assert 'Price' in row, row.keys()
+        assert 'Address' in row
+        assert 'Street Name' in row
+        assert 'Price' in row
 
     def test_read_json_dict(self):
-        """Test read_json_file() recognises top level of expected dict
+        """Test read_trees() recognises top level of expected dict
 
         Some expected key names:
             'short', 'tall'
@@ -84,6 +78,6 @@ class TestFiles(TestCase):
         data can be arbitrary below the top-level
             so that's as far down as we go
         """
-        data = files.read_json_file(default_json_path)
-        assert 'short' in data
-        assert 'tall' in data
+        trees = files.read_trees(files.default_trees_path)
+        assert 'short' in trees
+        assert 'tall' in trees
