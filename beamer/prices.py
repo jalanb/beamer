@@ -97,8 +97,8 @@ def first_currency(properties: list) -> str:
     """
     # regexp to look for known currencies at staart of a string
     currency_regexp = re.compile(f"^[{re.escape(_known_currencies)}]")
-    for property in properties:
-        price = property["Price"].strip()
+    for property_ in properties:
+        price = property_["Price"].strip()
         match = currency_regexp.search(price)
         if match:
             return match.group(0)

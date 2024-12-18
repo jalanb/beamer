@@ -137,7 +137,7 @@ commands = [
 [tool.tox.env.devs]
 deps = [".[develop]"]
 commands = [
-    ["py.test", "--exitfirst", "beamer", "tests" ]
+    ["py.test", "--exitfirst", "-m'not slow'", "--random-order","beamer", "tests" ]
 ]
 
 [tool.tox.env.pudb]
