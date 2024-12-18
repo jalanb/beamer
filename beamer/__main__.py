@@ -4,6 +4,7 @@ import argparse
 import os
 import sys
 
+from beamer import __version__ as version
 from beamer import files
 from beamer import prices
 
@@ -26,6 +27,12 @@ def parse_args() -> argparse.Namespace:
         type=str,
         default=files.default_trees_path,
         help=f"Path to trees file (default: {files.default_trees_path})",
+    )
+    parser.add_argument(
+        "-v",
+        "--version",
+        action="store_true",
+        help=f"Show version number and exit",
     )
     return parser.parse_args()
 
@@ -53,6 +60,9 @@ def main() -> int:
         And calls the script() function, above, for "the real work"
     """
     args = parse_args()
+    if args.version:
+        print(f"Version: {version}")
+        return os.EX_OK
     try:
         short_average, tall_average, currency = script(args.properties, args.trees)
         print(f"Price average among short trees: {currency} {short_average:,.2f}")
@@ -61,7 +71,7 @@ def main() -> int:
         show_error(error)
         return os.EX_DATAERR
     except FileNotFoundError as error:
-        show_error(error)
+        show_error(f"File not found: {error.filename!r}")
         return os.EX_OSFILE
     except Exception as error:
         show_error(error)
